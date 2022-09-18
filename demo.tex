@@ -1,0 +1,67 @@
+\documentclass{beamer}
+\usefonttheme{serif}
+\beamertemplatenavigationsymbolsempty
+
+\usepackage{xcoffins}
+\usepackage{place}
+\usepackage{ragged2e}
+\usepackage{lipsum}
+\usepackage{tikz}
+\usepackage{newfile}
+
+\newoutputstream{io}
+
+\ExplSyntaxOn
+
+\cs_generate_variant:Nn \tl_replace_all:Nnn { Nxx }
+
+\NewDocumentCommand \ExampleFrame { m +v } {
+
+    \tl_set:Nn \l_tmpa_tl {#2}
+    \tl_replace_all:Nxx \l_tmpa_tl { \iow_char:N \^^M } { \iow_char:N \^^J }
+    \regex_replace_once:nnN { ^\v* } { } \l_tmpa_tl
+
+    \openoutputfile{demo#1.tex}{io}
+    \addtostream{io}{\l_tmpa_tl}
+    \closeoutputstream{io}
+
+    \frame{\input{demo#1}}
+
+}
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\ExampleFrame{1}{
+% In preamble:
+% \usepackage{tikz}
+\place{\tikz{
+    \draw[line width=8pt, lightgray] circle[radius=3.25];
+}}
+\place[angle=10, scale=5]{Hello!}
+\place[pg-b, y=.5cm]{\thepage}
+}
+
+\ExampleFrame{2}{
+% In preamble:
+% \usepackage{ragged2e}
+% \usepackage{lipsum}
+\place[width=8cm]{
+    \justifying
+    \lipsum[1][1-5] % Example text
+}
+}
+
+\ExampleFrame{3}{
+\placesetup{scale=5}
+\place{Scaled!}
+}
+
+\begin{frame}
+\NewCoffin \MyCoffin
+\SetHorizontalCoffin \MyCoffin {My Coffin}
+\placecoffin[scale=2] \MyCoffin
+\end{frame}
+
+\end{document}
