@@ -14,7 +14,7 @@ build/place.pdf: place.dtx build/demo.pdf
 build/demo.pdf: demo.tex place.sty
 	$(LATEX) $<
 
-place.sty: place.dtx
+place.sty: place.dtx VERSION
 	$(TEX) $<
 	$(RM) place.log
 	$(SED) -i "" -e "s/{VERSION}/{$$(cat VERSION)}/" \
