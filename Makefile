@@ -8,6 +8,11 @@ SED=sed
 
 all: $(TARGETS)
 
+clean:
+	$(RM) -f $(TARGETS) build/*
+
+force: clean all
+
 build/abspos.pdf: abspos.dtx build/demo.pdf
 	$(LATEX) $<
 
