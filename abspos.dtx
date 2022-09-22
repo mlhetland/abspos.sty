@@ -34,7 +34,7 @@ SOFTWARE.
 % stop docstrip adding \endinput
 \postamble
 \endpostamble
-\generate{\file{place.sty}{\from{place.dtx}{package}}}
+\generate{\file{abspos.sty}{\from{abspos.dtx}{package}}}
 \ifx\fmtname\nameofplainTeX
     \expandafter\endbatchfile
 \else
@@ -53,7 +53,7 @@ SOFTWARE.
 \usepackage{tcolorbox}
 \tcbuselibrary{listings,skins}
 \usepackage{xcoffins}
-\usepackage{place}
+\usepackage{abspos}
 
 \lstdefinestyle{tcblatex}{language={[LaTeX]TeX},
     columns=fullflexible,
@@ -90,12 +90,12 @@ SOFTWARE.
 %</driver>
 %
 %<*package>
-\ProvidesExplPackage {place} {DATE} {VERSION}
+\ProvidesExplPackage {abspos} {DATE} {VERSION}
     {Absolute placement with coffins}
 %</package>
 % \fi
 %
-% \title{The \pkg{place} package\\ Absolute placement with coffins}
+% \title{The \pkg{abspos} package\\ Absolute placement with coffins}
 % \author{Magnus Lie Hetland}
 %
 % \maketitle
@@ -103,18 +103,20 @@ SOFTWARE.
 % \begin{documentation}
 %
 % \noindent
-% The \pkg{place} package lets you place contents at an absolute position,
+% The \pkg{abspos} package lets you place contents at an absolute position,
 % anchored at some specified part of the content, similar to how \pkg{tikz}
 % nodes work, though without using the two-pass strategy of \pkg{tikz}. It also
 % avoids messing with the order of \pkg{beamer} overlays, which is what happens
-% when one uses the \pkg{textpos} package with the \pkg{overlay} option. The
-% solution used is quite straightforward, combining \emph{coffins} (using
-% \pkg{l3coffins}) with the placement mechanisms of \pkg{atbegshi}.
+% when one uses the \pkg{textpos} package with the \pkg{overlay}
+% option.\footnote{Another possible solution is to use the \pkg{pst-abspos}
+% package, which relies on \pkg{pstricks}.} The solution used is quite
+% straightforward, combining \emph{coffins} (using \pkg{l3coffins}) with the
+% placement mechanisms of \pkg{atbegshi}.
 %
-% The main command of the package is |\place|, which is somewhat similar to the
+% The main command of the package is |\absput|, which is somewhat similar to the
 % |\put| command of the \LaTeX\@ |picture| environment.
 % By default, it places its contents in the middle of the page, so
-% |\place{Hello}| will put the word ``Hello'' front and center. Variations
+% |\absput{Hello}| will put the word ``Hello'' front and center. Variations
 % are then possible using an optional argument consisting of keys and key--value
 % pairs, as shown in the following.
 %
@@ -123,7 +125,7 @@ SOFTWARE.
 % \noindent
 % Supplying a |width| creates a vertical box. If the surrounding text is set,
 % for example, using \cs{raggedright} (as is common in \pkg{beamer}), the
-% contents of the \cs{place} command will be, too. So if you want your text
+% contents of the \cs{absput} command will be, too. So if you want your text
 % justified, you can use something like the \cs{justifying} command from
 % \pkg{ragged2e}.
 %
@@ -131,7 +133,7 @@ SOFTWARE.
 %
 % \noindent
 % The options can also be set globally (or within a group) using
-% \cs{placesetup}. For example, if you with to scale everything you place by a
+% \cs{absposset}. For example, if you with to scale everything you place by a
 % certain amount, you could do that as in the following.
 %
 % \Example{3}
@@ -146,7 +148,7 @@ SOFTWARE.
 % itself, you need to remove the background color, by setting |bg| to nothing,
 % as in the example code. If you want it behind the content, but still have a
 % background color, you would need to add that yourself, with a colored box or
-% filled \pkg{tikz} rectangle, possibly also using the \cs{place} command.}
+% filled \pkg{tikz} rectangle, possibly also using the \cs{absput} command.}
 %
 % ^^A Can't use tcblisting, because it uses \lstinputlisting, which doesn't
 % ^^A respect `gobble`
@@ -164,7 +166,7 @@ SOFTWARE.
 % \end{tcolorbox}
 %
 % \noindent
-% Now simply add a \cs{place} command at the beginning of the document, before
+% Now simply add a \cs{absput} command at the beginning of the document, before
 % your first |frame| (after |\begin{document}|), using |pg=\MyPageCoffin| to
 % specify which coffin to use for rendering and positioning contents. This gives
 % you a coordinate system starting at the top left corner of the page. If you
@@ -173,9 +175,17 @@ SOFTWARE.
 %
 % \section*{Reference}
 %
-% \begin{function}{\place}
+% \begin{function}{\absposset}
 % \begin{syntax}
-%   \cs{place} \oarg{options} \marg{contents}
+%   \cs{absposset} \marg{options}
+% \end{syntax}
+% Sets the options, as described under \cs{absput}, to the value they should
+% have within the current group (or globally, if not inside a group).
+% \end{function}
+%
+% \begin{function}{\absput}
+% \begin{syntax}
+%   \cs{absput} \oarg{options} \marg{contents}
 % \end{syntax}
 % Places \meta{contents} at some position (possibly scaled or rotated) as
 % dictated by the optional \meta{options}, supplied as keys and key--value
@@ -194,7 +204,7 @@ SOFTWARE.
 %     This corresponds to a \pkg{l3coffins} (or \pkg{xcoffins}) \emph{pole}. The
 %     available anchors are |l| for left, |hc| for center and |r| for right.
 %     These are also available as separate valueless keys, so if you supply
-%     \cs{place} with the key |l|, that is equivalent to using |h=l|, etc.
+%     \cs{absput} with the key |l|, that is equivalent to using |h=l|, etc.
 %
 %     There are also two-letter shortcuts defined for setting the horizontal and
 %     vertical anchors simultaneously, with the vertical one first. For example,
@@ -237,7 +247,7 @@ SOFTWARE.
 %     \item |v=|\meta{v-anchor}: The vertical anchor to use for positioning (see
 %     |h|). The available anchors are |t| for top, |vc| for center, |b| for
 %     bottom and |H| for baseline. These are also available as separate
-%     valueless keys, so if you supply \cs{place} with the key |t|, that is
+%     valueless keys, so if you supply \cs{absput} with the key |t|, that is
 %     equivalent to using |v=t|, etc.
 %
 %     Note that if the |width| key is set, a vertial coffin is used, which makes
@@ -268,20 +278,12 @@ SOFTWARE.
 %     No default. Initial value |0pt|.
 % \end{itemize}
 %
-% \begin{function}{\placesetup}
+% \begin{function}{\absputcoffin}
 % \begin{syntax}
-%   \cs{placesetup} \marg{options}
-% \end{syntax}
-% Sets the options, as described under \cs{place}, to the value they should have
-% within the current group (or globally, if not inside a group).
-% \end{function}
-%
-% \begin{function}{\placecoffin}
-% \begin{syntax}
-%   \cs{placecoffin} \oarg{options} \meta{coffin}
+%   \cs{absputcoffin} \oarg{options} \meta{coffin}
 % \end{syntax}
 % Places \meta{coffin} at some position (possibly scaled or rotated), just like
-% \cs{place}. The difference is that a coffin is provided directly, rather than
+% \cs{absput}. The difference is that a coffin is provided directly, rather than
 % constructed by typesetting some supplied contents. This means that the |width|
 % key is not used, though it is permitted for consistency (and ease of reusing
 % option lists).
@@ -291,18 +293,17 @@ SOFTWARE.
 %
 % \begin{implementation}
 %
-% ^^A\section{\pkg{place} implementation}
 % \section*{Implementation}
 %
 %    \begin{macrocode}
 %<*package>
-%<@@=plc>
+%<@@=ap>
 %    \end{macrocode}
 %
 % \noindent
 % First, we need to import the necessary packages. We're using \pkg{expl3} to
 % set up the package, so we get \pkg{l3coffins} for free (and cannot import it
-% directly, anyway). If \pkg{place} is used with \pkg{beamer}, then
+% directly, anyway). If \pkg{abspos} is used with \pkg{beamer}, then
 % \pkg{atbegshi} is already included. Elsewhere, though, it will not be, so we
 % require it here.
 %
@@ -322,7 +323,7 @@ SOFTWARE.
 % \begin{variable}{\g_plc_shipout_coffin}
 %
 % This variable is normally used to store the contents to be placed on the
-% current page. It accumulates the contents from every call to \cs{place} until
+% current page. It accumulates the contents from every call to \cs{absput} until
 % the page is about to be typeset (shipped out), at which point
 % \cs{g_plc_shipout_coffin} is typeset in front.
 %
@@ -376,9 +377,9 @@ SOFTWARE.
 % \begin{macro}{\plc_reset_overlay:}
 % This is a utility to reset \pkg{beamer} overlay specifications at the end of
 % our coffin contents. The idea is that if we use, say, \cs{pause} inside
-% \cs{place}, then everything after the \cs{pause} command will be paused,
-% including material \emph{outside} \cs{place}. To restrict such commands to the
-% contents provided to \cs{place}, we use \cs{onslide<1->} after typesetting the
+% \cs{absput}, then everything after the \cs{pause} command will be paused,
+% including material \emph{outside} \cs{absput}. To restrict such commands to the
+% contents provided to \cs{absput}, we use \cs{onslide<1->} after typesetting the
 % contents in our coffin. This is only useful (or possible) when using
 % \pkg{beamer}, so otherwise, we just alias \cs{plc_reset_overlay:} to
 % \cs{relax}, i.e., don't do anything.
@@ -391,11 +392,11 @@ SOFTWARE.
 % \end{macro}
 %
 % \noindent
-% We now define the various keys used to configure \cs{place}, as described
+% We now define the various keys used to configure \cs{absput}, as described
 % in the reference.
 %
 %    \begin{macrocode}
-\keys_define:nn { place } {
+\keys_define:nn { abspos } {
 
     angle .tl_set:N          = \l_plc_angle_tl,
     angle .initial:V         = \c_novalue_tl,
@@ -443,7 +444,7 @@ SOFTWARE.
 \clist_const:Nn \@@_vanchors_clist {t,vc,b,H,T,B}
 
 \cs_new:Npn \@@_define_shortcuts:nnn #1 #2 #3 {
-    \keys_define:nn { place } {
+    \keys_define:nn { abspos } {
 
     #1    .meta:n            = { #2 },
     #1    .value_forbidden:n = true,
@@ -487,24 +488,24 @@ SOFTWARE.
     }
 }
 %    \end{macrocode}
-% In order to let the user set options outside the actual use of \cs{place} and
-% \cs{placecoffin}, we introduce a wrapper:
+% In order to let the user set options outside the actual use of \cs{absput} and
+% \cs{absputcoffin}, we introduce a wrapper:
 %    \begin{macrocode}
-\NewDocumentCommand \placesetup { +m } {
-    \keys_set:nn { place } { #1 }
+\NewDocumentCommand \absposset { +m } {
+    \keys_set:nn { abspos } { #1 }
 }
 %    \end{macrocode}
 %
-% \begin{macro}{\place}
+% \begin{macro}{\absput}
 % This is the main command of the package. It takes a key--value list as its
 % first optional argument, followed by the contents that are to be placed.
 %    \begin{macrocode}
-\NewDocumentCommand \place { +O{ } +m } {
+\NewDocumentCommand \absput { +O{ } +m } {
     \group_begin:
 %    \end{macrocode}
 % First we handle the keys, updating variables holding coordinates, etc.
 %    \begin{macrocode}
-    \keys_set:nn { place } { #1 }
+    \keys_set:nn { abspos } { #1 }
 %    \end{macrocode}
 % Then the contents are typeset, with some additions, into a temporary coffin.
 % The additions are that whitespace is stripped around the contents, and that we
@@ -527,31 +528,31 @@ SOFTWARE.
 %    \end{macrocode}
 % Finally, actually place the typeset coffin on the canvas coffin.
 %    \begin{macrocode}
-    \@@_place_coffin:N \l_tmpa_coffin
+    \@@_absput_coffin:N \l_tmpa_coffin
     \group_end:
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\placecoffin}
-%    A thin wrapper around the internal \cs{@@_place_coffin:N}. The only extra
+% \begin{macro}{\absputcoffin}
+%    A thin wrapper around the internal \cs{@@_absput_coffin:N}. The only extra
 %    work done here is setting the keys.
 %    \begin{macrocode}
-\NewDocumentCommand \placecoffin { +O{ } m } {
+\NewDocumentCommand \absputcoffin { +O{ } m } {
     \group_begin:
-    \keys_set:nn { place } { #1 }
-    \@@_place_coffin:N #2
+    \keys_set:nn { abspos } { #1 }
+    \@@_absput_coffin:N #2
     \group_end:
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@@_place_coffin:N}
+% \begin{macro}{\@@_absput_coffin:N}
 % An internal macro for placing a given coffin, using the options currently in
 % effect (i.e., as configured by \cs{keys_set:nn} in some outer group). Used by
-% \cs{place} and \cs{placecoffin}.
+% \cs{absput} and \cs{absputcoffin}.
 %    \begin{macrocode}
-\cs_new:Npn \@@_place_coffin:N #1 {
+\cs_new:Npn \@@_absput_coffin:N #1 {
 %    \end{macrocode}
 % If a scale has been provided, we scale the temporary coffin (with the same
 % factor in both directions).
@@ -583,7 +584,7 @@ SOFTWARE.
 % global,\footnote{\url{https://tex.stackexchange.com/questions/618198}} so
 % to have our modification take effect outside the current group also for older
 % versions of \pkg{l3coffins}, we perform a final (normally redundant) global
-% self-assignment before ending the \cs{place} command.
+% self-assignment before ending the \cs{absput} command.
 %
 %    \begin{macrocode}
     \coffin_gset_eq:NN \g_plc_canvas_coffin \g_plc_canvas_coffin

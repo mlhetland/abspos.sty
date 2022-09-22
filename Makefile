@@ -1,4 +1,4 @@
-TARGETS=place.pdf place.sty
+TARGETS=abspos.pdf abspos.sty
 
 LATEX=latexmk -norc -pdf -auxdir=build -outdir=build
 TEX=tex
@@ -8,17 +8,17 @@ SED=sed
 
 all: $(TARGETS)
 
-build/place.pdf: place.dtx build/demo.pdf
+build/abspos.pdf: abspos.dtx build/demo.pdf
 	$(LATEX) $<
 
-build/demo.pdf: demo.tex place.sty
+build/demo.pdf: demo.tex abspos.sty
 	$(LATEX) $<
 
-place.sty: place.dtx VERSION
+abspos.sty: abspos.dtx VERSION
 	$(TEX) $<
-	$(RM) place.log
+	$(RM) abspos.log
 	$(SED) -i "" -e "s/{VERSION}/{$$(cat VERSION)}/" \
-		-e "s/{DATE}/{$$(date +%Y-%m-%d)}/" place.sty
+		-e "s/{DATE}/{$$(date +%Y-%m-%d)}/" abspos.sty
 
 %: build/%
 	cp $< $@

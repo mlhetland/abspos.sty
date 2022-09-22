@@ -1,10 +1,10 @@
 %%
-%% This is file `place.sty',
+%% This is file `abspos.sty',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
-%% place.dtx  (with options: `package')
+%% abspos.dtx  (with options: `package')
 %% 
 %% MIT License
 %% 
@@ -30,7 +30,7 @@
 %% 
 \RequirePackage{expl3}
 
-\ProvidesExplPackage {place} {2022-09-20} {0.1}
+\ProvidesExplPackage {abspos} {2022-09-22} {0.1}
     {Absolute placement with coffins}
 \RequirePackage{atbegshi}
 \cs_generate_variant:Nn \tl_if_novalue:nTF       { VTF }
@@ -54,7 +54,7 @@
 \@ifclassloaded{beamer}
     { \tl_gset:Nn    \plc_reset_overlay: { \onslide<1-> } }
     { \tl_gset_eq:NN \plc_reset_overlay:   \relax         }
-\keys_define:nn { place } {
+\keys_define:nn { abspos } {
 
     angle .tl_set:N          = \l_plc_angle_tl,
     angle .initial:V         = \c_novalue_tl,
@@ -98,11 +98,11 @@
 
 }
 
-\clist_const:Nn \__plc_hanchors_clist {l,hc,r}
-\clist_const:Nn \__plc_vanchors_clist {t,vc,b,H,T,B}
+\clist_const:Nn \__ap_hanchors_clist {l,hc,r}
+\clist_const:Nn \__ap_vanchors_clist {t,vc,b,H,T,B}
 
-\cs_new:Npn \__plc_define_shortcuts:nnn #1 #2 #3 {
-    \keys_define:nn { place } {
+\cs_new:Npn \__ap_define_shortcuts:nnn #1 #2 #3 {
+    \keys_define:nn { abspos } {
 
     #1    .meta:n            = { #2 },
     #1    .value_forbidden:n = true,
@@ -113,22 +113,22 @@
     }
 }
 
-\cs_generate_variant:Nn \__plc_define_shortcuts:nnn { Vnn }
+\cs_generate_variant:Nn \__ap_define_shortcuts:nnn { Vnn }
 
-\clist_map_inline:Nn \__plc_hanchors_clist {
+\clist_map_inline:Nn \__ap_hanchors_clist {
 
-    \__plc_define_shortcuts:nnn { #1 } { h = #1 } { pg-h = #1 }
-
-}
-
-\clist_map_inline:Nn \__plc_vanchors_clist {
-
-    \__plc_define_shortcuts:nnn { #1 } { v = #1 } { pg-v = #1 }
+    \__ap_define_shortcuts:nnn { #1 } { h = #1 } { pg-h = #1 }
 
 }
 
-\clist_map_inline:Nn \__plc_vanchors_clist {
-    \clist_map_inline:Nn \__plc_hanchors_clist {
+\clist_map_inline:Nn \__ap_vanchors_clist {
+
+    \__ap_define_shortcuts:nnn { #1 } { v = #1 } { pg-v = #1 }
+
+}
+
+\clist_map_inline:Nn \__ap_vanchors_clist {
+    \clist_map_inline:Nn \__ap_hanchors_clist {
 
         \tl_clear:N \g_tmpa_tl
 
@@ -140,17 +140,17 @@
             { \tl_put_right:Nn \g_tmpa_tl { c } }
             { \tl_put_right:Nn \g_tmpa_tl { ##1 } }
 
-        \__plc_define_shortcuts:Vnn
+        \__ap_define_shortcuts:Vnn
             \g_tmpa_tl { v = #1, h = ##1 } { pg-v = #1, pg-h = ##1 }
 
     }
 }
-\NewDocumentCommand \placesetup { +m } {
-    \keys_set:nn { place } { #1 }
+\NewDocumentCommand \absposset { +m } {
+    \keys_set:nn { abspos } { #1 }
 }
-\NewDocumentCommand \place { +O{ } +m } {
+\NewDocumentCommand \absput { +O{ } +m } {
     \group_begin:
-    \keys_set:nn { place } { #1 }
+    \keys_set:nn { abspos } { #1 }
     \tl_set:Nn \l_tmpa_tl {
         \ignorespaces #2 \unskip
         \plc_reset_overlay:
@@ -160,16 +160,16 @@
     } {
         \vcoffin_set:Nnn \l_tmpa_coffin \l_plc_width_tl \l_tmpa_tl
     }
-    \__plc_place_coffin:N \l_tmpa_coffin
+    \__ap_absput_coffin:N \l_tmpa_coffin
     \group_end:
 }
-\NewDocumentCommand \placecoffin { +O{ } m } {
+\NewDocumentCommand \absputcoffin { +O{ } m } {
     \group_begin:
-    \keys_set:nn { place } { #1 }
-    \__plc_place_coffin:N #2
+    \keys_set:nn { abspos } { #1 }
+    \__ap_absput_coffin:N #2
     \group_end:
 }
-\cs_new:Npn \__plc_place_coffin:N #1 {
+\cs_new:Npn \__ap_absput_coffin:N #1 {
     \tl_if_novalue:VF \l_plc_scale_tl {
         \coffin_scale:Nnn #1 \l_plc_scale_tl \l_plc_scale_tl
     }
@@ -186,4 +186,4 @@
 }
 %% 
 %%
-%% End of file `place.sty'.
+%% End of file `abspos.sty'.
