@@ -297,7 +297,7 @@ SOFTWARE.
 %
 %    \begin{macrocode}
 %<*package>
-%<@@=ap>
+%<@@=apos>
 %    \end{macrocode}
 %
 % \noindent
@@ -320,24 +320,24 @@ SOFTWARE.
 \cs_generate_variant:Nn \coffin_gattach:NnnNnnnn { NooNoonn }
 %    \end{macrocode}
 %
-% \begin{variable}{\g_plc_shipout_coffin}
+% \begin{variable}{\g_apos_shipout_coffin}
 %
 % This variable is normally used to store the contents to be placed on the
 % current page. It accumulates the contents from every call to \cs{absput} until
 % the page is about to be typeset (shipped out), at which point
-% \cs{g_plc_shipout_coffin} is typeset in front.
+% \cs{g_apos_shipout_coffin} is typeset in front.
 %
 %    \begin{macrocode}
-\coffin_new:N \g_plc_shipout_coffin
+\coffin_new:N \g_apos_shipout_coffin
 %    \end{macrocode}
 % \end{variable}
 %
-% \begin{macro}{\plc_reset_shipout_coffin:}\label{p:reset}
+% \begin{macro}{\apos_reset_shipout_coffin:}\label{p:reset}
 % Used to initialize, and later reinitialize, the shipout coffin, to simply be
 % an empty coffin with the width and height of the current page.
 %    \begin{macrocode}
-\cs_new:Npn \plc_reset_shipout_coffin: {
-    \hcoffin_gset:Nn \g_plc_shipout_coffin {
+\cs_new:Npn \apos_reset_shipout_coffin: {
+    \hcoffin_gset:Nn \g_apos_shipout_coffin {
         \phantom{\rule{\paperwidth}{\paperheight}}
     }
 }
@@ -345,49 +345,49 @@ SOFTWARE.
 % \end{macro}
 %
 % \noindent
-% The following hook ensures that that \cs{g_plc_shipout_coffin} is typeset in
+% The following hook ensures that that \cs{g_apos_shipout_coffin} is typeset in
 % front of the page as it is being shipped out (anchored top left), and then
 % cleared, ready to accumulate contents for the next page. The \pkg{atbegshi}
 % command used wraps its contents in a |picture| environment, which we don't
 % really need, but it seems to be more trouble than it's worth to get rid of it.
 %
 %    \begin{macrocode}
-\plc_reset_shipout_coffin:
+\apos_reset_shipout_coffin:
 \AtBeginShipout{
     \AtBeginShipoutUpperLeftForeground{
-        \coffin_typeset:Nnnnn \g_plc_shipout_coffin {t} {l} {0pt} {0pt}
-        \plc_reset_shipout_coffin:
+        \coffin_typeset:Nnnnn \g_apos_shipout_coffin {t} {l} {0pt} {0pt}
+        \apos_reset_shipout_coffin:
     }
 }
 %    \end{macrocode}
 %
-% \begin{variable}{\g_plc_canvas_coffin}
+% \begin{variable}{\g_apos_canvas_coffin}
 %
 % This variable is used as part of the |pg| key, and is initially set equal to
-% \cs{g_plc_shipout_coffin}, so that whatever is rendered to the canvas (i.e.,
-% \cs{g_plc_canvas_coffin}) is placed on top of the page contents on shipout,
+% \cs{g_apos_shipout_coffin}, so that whatever is rendered to the canvas (i.e.,
+% \cs{g_apos_canvas_coffin}) is placed on top of the page contents on shipout,
 % and then cleared. If a different behavior is desired, another coffin can can
 % be supplied instead. Rather than constructing a coffin, we just set up a token
 % list, which initially will be aliased to the actual coffin
-% \cs{g_plc_shipout_coffin} as part of the key handling.
+% \cs{g_apos_shipout_coffin} as part of the key handling.
 %    \begin{macrocode}
-\tl_new:N \g_plc_canvas_coffin
+\tl_new:N \g_apos_canvas_coffin
 %    \end{macrocode}
 % \end{variable}
-% \begin{macro}{\plc_reset_overlay:}
+% \begin{macro}{\apos_reset_overlay:}
 % This is a utility to reset \pkg{beamer} overlay specifications at the end of
 % our coffin contents. The idea is that if we use, say, \cs{pause} inside
 % \cs{absput}, then everything after the \cs{pause} command will be paused,
 % including material \emph{outside} \cs{absput}. To restrict such commands to the
 % contents provided to \cs{absput}, we use \cs{onslide<1->} after typesetting the
 % contents in our coffin. This is only useful (or possible) when using
-% \pkg{beamer}, so otherwise, we just alias \cs{plc_reset_overlay:} to
+% \pkg{beamer}, so otherwise, we just alias \cs{ap_reset_overlay:} to
 % \cs{relax}, i.e., don't do anything.
 %    \begin{macrocode}
-\tl_new:N \plc_reset_overlay:
+\tl_new:N \apos_reset_overlay:
 \@ifclassloaded{beamer}
-    { \tl_gset:Nn    \plc_reset_overlay: { \onslide<1-> } }
-    { \tl_gset_eq:NN \plc_reset_overlay:   \relax         }
+    { \tl_gset:Nn    \apos_reset_overlay: { \onslide<1-> } }
+    { \tl_gset_eq:NN \apos_reset_overlay:   \relax         }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -398,43 +398,43 @@ SOFTWARE.
 %    \begin{macrocode}
 \keys_define:nn { abspos } {
 
-    angle .tl_set:N          = \l_plc_angle_tl,
+    angle .tl_set:N          = \l_apos_angle_tl,
     angle .initial:V         = \c_novalue_tl,
     angle .value_required:n  = true,
 
-    h     .tl_set:N          = \l_plc_hanchor_tl,
+    h     .tl_set:N          = \l_apos_hanchor_tl,
     h     .initial:n         = hc,
     h     .value_required:n  = true,
 
-    pg    .code:n            = { \tl_set_eq:NN \g_plc_canvas_coffin #1 },
-    pg    .initial:n         = \g_plc_shipout_coffin,
+    pg    .code:n            = { \tl_set_eq:NN \g_apos_canvas_coffin #1 },
+    pg    .initial:n         = \g_apos_shipout_coffin,
     pg    .value_required:n  = true,
 
-    pg-h  .tl_set:N          = \l_plc_on_hanchor_tl,
+    pg-h  .tl_set:N          = \l_apos_on_hanchor_tl,
     pg-h  .initial:n         = hc,
     pg-h  .value_required:n  = true,
 
-    pg-v  .tl_set:N          = \l_plc_on_vanchor_tl,
+    pg-v  .tl_set:N          = \l_apos_on_vanchor_tl,
     pg-v  .initial:n         = vc,
     pg-v  .value_required:n  = true,
 
-    scale .tl_set:N          = \l_plc_scale_tl,
+    scale .tl_set:N          = \l_apos_scale_tl,
     scale .initial:V         = \c_novalue_tl,
     scale .value_required:n  = true,
 
-    v     .tl_set:N          = \l_plc_vanchor_tl,
+    v     .tl_set:N          = \l_apos_vanchor_tl,
     v     .initial:n         = vc,
     v     .value_required:n  = true,
 
-    width .tl_set:N          = \l_plc_width_tl,
+    width .tl_set:N          = \l_apos_width_tl,
     width .initial:V         = \c_novalue_tl,
     width .value_required:n  = true,
 
-    x     .tl_set:N          = \l_plc_x_tl,
+    x     .tl_set:N          = \l_apos_x_tl,
     x     .initial:n         = { 0pt },
     x     .value_required:n  = true,
 
-    y     .tl_set:N          = \l_plc_y_tl,
+    y     .tl_set:N          = \l_apos_y_tl,
     y     .initial:n         = { 0pt },
     y     .value_required:n  = true,
 
@@ -518,12 +518,12 @@ SOFTWARE.
 %    \begin{macrocode}
     \tl_set:Nn \l_tmpa_tl {
         \ignorespaces #2 \unskip
-        \plc_reset_overlay:
+        \apos_reset_overlay:
     }
-    \tl_if_novalue:VTF \l_plc_width_tl {
+    \tl_if_novalue:VTF \l_apos_width_tl {
         \hcoffin_set:Nn \l_tmpa_coffin \l_tmpa_tl
     } {
-        \vcoffin_set:Nnn \l_tmpa_coffin \l_plc_width_tl \l_tmpa_tl
+        \vcoffin_set:Nnn \l_tmpa_coffin \l_apos_width_tl \l_tmpa_tl
     }
 %    \end{macrocode}
 % Finally, actually place the typeset coffin on the canvas coffin.
@@ -557,25 +557,25 @@ SOFTWARE.
 % If a scale has been provided, we scale the temporary coffin (with the same
 % factor in both directions).
 %    \begin{macrocode}
-    \tl_if_novalue:VF \l_plc_scale_tl {
-        \coffin_scale:Nnn #1 \l_plc_scale_tl \l_plc_scale_tl
+    \tl_if_novalue:VF \l_apos_scale_tl {
+        \coffin_scale:Nnn #1 \l_apos_scale_tl \l_apos_scale_tl
     }
 %    \end{macrocode}
 % If an angle has been provided, we rotate the temporary coffin.
 %    \begin{macrocode}
-    \tl_if_novalue:VF \l_plc_angle_tl {
-        \coffin_rotate:Nn #1 \l_plc_angle_tl
+    \tl_if_novalue:VF \l_apos_angle_tl {
+        \coffin_rotate:Nn #1 \l_apos_angle_tl
     }
 %    \end{macrocode}
 % We now join the temporary coffin to our canvas coffin, so it will be rendered
 % at the correct position at shipout.
 %    \begin{macrocode}
     \coffin_gattach:NooNoonn
-        \g_plc_canvas_coffin
-            {\l_plc_on_hanchor_tl} {\l_plc_on_vanchor_tl}
+        \g_apos_canvas_coffin
+            {\l_apos_on_hanchor_tl} {\l_apos_on_vanchor_tl}
         #1
-            {\l_plc_hanchor_tl} {\l_plc_vanchor_tl}
-            {\l_plc_x_tl} {\l_plc_y_tl}
+            {\l_apos_hanchor_tl} {\l_apos_vanchor_tl}
+            {\l_apos_x_tl} {\l_apos_y_tl}
 %    \end{macrocode}
 %
 % \noindent
@@ -587,7 +587,7 @@ SOFTWARE.
 % self-assignment before ending the \cs{absput} command.
 %
 %    \begin{macrocode}
-    \coffin_gset_eq:NN \g_plc_canvas_coffin \g_plc_canvas_coffin
+    \coffin_gset_eq:NN \g_apos_canvas_coffin \g_apos_canvas_coffin
 }
 %    \end{macrocode}
 % \end{macro}

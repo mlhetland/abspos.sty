@@ -36,72 +36,72 @@
 \cs_generate_variant:Nn \tl_if_novalue:nTF       { VTF }
 \cs_generate_variant:Nn \tl_if_novalue:nF        { VF }
 \cs_generate_variant:Nn \coffin_gattach:NnnNnnnn { NooNoonn }
-\coffin_new:N \g_plc_shipout_coffin
-\cs_new:Npn \plc_reset_shipout_coffin: {
-    \hcoffin_gset:Nn \g_plc_shipout_coffin {
+\coffin_new:N \g_apos_shipout_coffin
+\cs_new:Npn \apos_reset_shipout_coffin: {
+    \hcoffin_gset:Nn \g_apos_shipout_coffin {
         \phantom{\rule{\paperwidth}{\paperheight}}
     }
 }
-\plc_reset_shipout_coffin:
+\apos_reset_shipout_coffin:
 \AtBeginShipout{
     \AtBeginShipoutUpperLeftForeground{
-        \coffin_typeset:Nnnnn \g_plc_shipout_coffin {t} {l} {0pt} {0pt}
-        \plc_reset_shipout_coffin:
+        \coffin_typeset:Nnnnn \g_apos_shipout_coffin {t} {l} {0pt} {0pt}
+        \apos_reset_shipout_coffin:
     }
 }
-\tl_new:N \g_plc_canvas_coffin
-\tl_new:N \plc_reset_overlay:
+\tl_new:N \g_apos_canvas_coffin
+\tl_new:N \apos_reset_overlay:
 \@ifclassloaded{beamer}
-    { \tl_gset:Nn    \plc_reset_overlay: { \onslide<1-> } }
-    { \tl_gset_eq:NN \plc_reset_overlay:   \relax         }
+    { \tl_gset:Nn    \apos_reset_overlay: { \onslide<1-> } }
+    { \tl_gset_eq:NN \apos_reset_overlay:   \relax         }
 \keys_define:nn { abspos } {
 
-    angle .tl_set:N          = \l_plc_angle_tl,
+    angle .tl_set:N          = \l_apos_angle_tl,
     angle .initial:V         = \c_novalue_tl,
     angle .value_required:n  = true,
 
-    h     .tl_set:N          = \l_plc_hanchor_tl,
+    h     .tl_set:N          = \l_apos_hanchor_tl,
     h     .initial:n         = hc,
     h     .value_required:n  = true,
 
-    pg    .code:n            = { \tl_set_eq:NN \g_plc_canvas_coffin #1 },
-    pg    .initial:n         = \g_plc_shipout_coffin,
+    pg    .code:n            = { \tl_set_eq:NN \g_apos_canvas_coffin #1 },
+    pg    .initial:n         = \g_apos_shipout_coffin,
     pg    .value_required:n  = true,
 
-    pg-h  .tl_set:N          = \l_plc_on_hanchor_tl,
+    pg-h  .tl_set:N          = \l_apos_on_hanchor_tl,
     pg-h  .initial:n         = hc,
     pg-h  .value_required:n  = true,
 
-    pg-v  .tl_set:N          = \l_plc_on_vanchor_tl,
+    pg-v  .tl_set:N          = \l_apos_on_vanchor_tl,
     pg-v  .initial:n         = vc,
     pg-v  .value_required:n  = true,
 
-    scale .tl_set:N          = \l_plc_scale_tl,
+    scale .tl_set:N          = \l_apos_scale_tl,
     scale .initial:V         = \c_novalue_tl,
     scale .value_required:n  = true,
 
-    v     .tl_set:N          = \l_plc_vanchor_tl,
+    v     .tl_set:N          = \l_apos_vanchor_tl,
     v     .initial:n         = vc,
     v     .value_required:n  = true,
 
-    width .tl_set:N          = \l_plc_width_tl,
+    width .tl_set:N          = \l_apos_width_tl,
     width .initial:V         = \c_novalue_tl,
     width .value_required:n  = true,
 
-    x     .tl_set:N          = \l_plc_x_tl,
+    x     .tl_set:N          = \l_apos_x_tl,
     x     .initial:n         = { 0pt },
     x     .value_required:n  = true,
 
-    y     .tl_set:N          = \l_plc_y_tl,
+    y     .tl_set:N          = \l_apos_y_tl,
     y     .initial:n         = { 0pt },
     y     .value_required:n  = true,
 
 }
 
-\clist_const:Nn \__ap_hanchors_clist {l,hc,r}
-\clist_const:Nn \__ap_vanchors_clist {t,vc,b,H,T,B}
+\clist_const:Nn \__apos_hanchors_clist {l,hc,r}
+\clist_const:Nn \__apos_vanchors_clist {t,vc,b,H,T,B}
 
-\cs_new:Npn \__ap_define_shortcuts:nnn #1 #2 #3 {
+\cs_new:Npn \__apos_define_shortcuts:nnn #1 #2 #3 {
     \keys_define:nn { abspos } {
 
     #1    .meta:n            = { #2 },
@@ -113,22 +113,22 @@
     }
 }
 
-\cs_generate_variant:Nn \__ap_define_shortcuts:nnn { Vnn }
+\cs_generate_variant:Nn \__apos_define_shortcuts:nnn { Vnn }
 
-\clist_map_inline:Nn \__ap_hanchors_clist {
+\clist_map_inline:Nn \__apos_hanchors_clist {
 
-    \__ap_define_shortcuts:nnn { #1 } { h = #1 } { pg-h = #1 }
-
-}
-
-\clist_map_inline:Nn \__ap_vanchors_clist {
-
-    \__ap_define_shortcuts:nnn { #1 } { v = #1 } { pg-v = #1 }
+    \__apos_define_shortcuts:nnn { #1 } { h = #1 } { pg-h = #1 }
 
 }
 
-\clist_map_inline:Nn \__ap_vanchors_clist {
-    \clist_map_inline:Nn \__ap_hanchors_clist {
+\clist_map_inline:Nn \__apos_vanchors_clist {
+
+    \__apos_define_shortcuts:nnn { #1 } { v = #1 } { pg-v = #1 }
+
+}
+
+\clist_map_inline:Nn \__apos_vanchors_clist {
+    \clist_map_inline:Nn \__apos_hanchors_clist {
 
         \tl_clear:N \g_tmpa_tl
 
@@ -140,7 +140,7 @@
             { \tl_put_right:Nn \g_tmpa_tl { c } }
             { \tl_put_right:Nn \g_tmpa_tl { ##1 } }
 
-        \__ap_define_shortcuts:Vnn
+        \__apos_define_shortcuts:Vnn
             \g_tmpa_tl { v = #1, h = ##1 } { pg-v = #1, pg-h = ##1 }
 
     }
@@ -153,36 +153,36 @@
     \keys_set:nn { abspos } { #1 }
     \tl_set:Nn \l_tmpa_tl {
         \ignorespaces #2 \unskip
-        \plc_reset_overlay:
+        \apos_reset_overlay:
     }
-    \tl_if_novalue:VTF \l_plc_width_tl {
+    \tl_if_novalue:VTF \l_apos_width_tl {
         \hcoffin_set:Nn \l_tmpa_coffin \l_tmpa_tl
     } {
-        \vcoffin_set:Nnn \l_tmpa_coffin \l_plc_width_tl \l_tmpa_tl
+        \vcoffin_set:Nnn \l_tmpa_coffin \l_apos_width_tl \l_tmpa_tl
     }
-    \__ap_absput_coffin:N \l_tmpa_coffin
+    \__apos_absput_coffin:N \l_tmpa_coffin
     \group_end:
 }
 \NewDocumentCommand \absputcoffin { +O{ } m } {
     \group_begin:
     \keys_set:nn { abspos } { #1 }
-    \__ap_absput_coffin:N #2
+    \__apos_absput_coffin:N #2
     \group_end:
 }
-\cs_new:Npn \__ap_absput_coffin:N #1 {
-    \tl_if_novalue:VF \l_plc_scale_tl {
-        \coffin_scale:Nnn #1 \l_plc_scale_tl \l_plc_scale_tl
+\cs_new:Npn \__apos_absput_coffin:N #1 {
+    \tl_if_novalue:VF \l_apos_scale_tl {
+        \coffin_scale:Nnn #1 \l_apos_scale_tl \l_apos_scale_tl
     }
-    \tl_if_novalue:VF \l_plc_angle_tl {
-        \coffin_rotate:Nn #1 \l_plc_angle_tl
+    \tl_if_novalue:VF \l_apos_angle_tl {
+        \coffin_rotate:Nn #1 \l_apos_angle_tl
     }
     \coffin_gattach:NooNoonn
-        \g_plc_canvas_coffin
-            {\l_plc_on_hanchor_tl} {\l_plc_on_vanchor_tl}
+        \g_apos_canvas_coffin
+            {\l_apos_on_hanchor_tl} {\l_apos_on_vanchor_tl}
         #1
-            {\l_plc_hanchor_tl} {\l_plc_vanchor_tl}
-            {\l_plc_x_tl} {\l_plc_y_tl}
-    \coffin_gset_eq:NN \g_plc_canvas_coffin \g_plc_canvas_coffin
+            {\l_apos_hanchor_tl} {\l_apos_vanchor_tl}
+            {\l_apos_x_tl} {\l_apos_y_tl}
+    \coffin_gset_eq:NN \g_apos_canvas_coffin \g_apos_canvas_coffin
 }
 %% 
 %%
