@@ -13,6 +13,17 @@ clean:
 
 force: clean all
 
+VERSION=$$(cat VERSION)
+DATE=$$(date -r VERSION +%Y-%m-%d)
+YEAR=$$(date -r VERSION +%Y)
+SUBST1="s/\(Copyright (c) 2021-\)[^ ]*/\1$(YEAR)/"
+SUBST2="s/\(ProvidesExplPackage {abspos}\) .*/\1 {$(DATE)} {$(VERSION)}/"
+bump:
+	$(SED) -i "" \
+	-e $(SUBST1) \
+	-e $(SUBST2) \
+	abspos.dtx
+
 build/abspos.pdf: abspos.dtx build/demo.pdf
 	$(LATEX) $<
 
@@ -22,8 +33,6 @@ build/demo.pdf: demo.tex abspos.sty
 abspos.sty: abspos.dtx VERSION
 	$(TEX) $<
 	$(RM) abspos.log
-	$(SED) -i "" -e "s/{VERSION}/{$$(cat VERSION)}/" \
-		-e "s/{DATE}/{$$(date +%Y-%m-%d)}/" abspos.sty
 
 %: build/%
 	cp $< $@
